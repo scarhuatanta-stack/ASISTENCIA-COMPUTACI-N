@@ -1,7 +1,30 @@
 const HOJA_PERSONAS = 'PERSONAS';
 const HOJA_REGISTROS = 'REGISTROS';
 
-function doGet() {
+function doGet(e) {
+  e = e || { parameter: {} };
+  const p = e.parameter || {};
+
+  // API JSONP para GitHub Pages.
+  if (p.callback) {
+    const callback = String(p.callback).replace(/[^a-zA-Z0-9_.$]/g, '');
+    let resultado;
+    try {
+      if (p.accion === 'buscar') {
+        resultado = buscarPersona(p.rut);
+      } else if (p.accion === 'guardar') {
+        resultado = guardarRegistro(p.rut, p.nombre, p.equipo);
+      } else {
+        resultado = { ok: false, mensaje: 'Acción no válida' };
+      }
+    } catch (err) {
+      resultado = { ok: false, mensaje: err.message || String(err) };
+    }
+    return ContentService
+      .createTextOutput(callback + '(' + JSON.stringify(resultado) + ');')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+
   return HtmlService.createHtmlOutputFromFile('index')
     .setTitle('ASISTENCIA COMPUTACIÓN')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
@@ -15,7 +38,7 @@ function normalizarRut(rut) {
 
 function buscarPersona(rut) {
   const rutBuscado = normalizarRut(rut);
-  if (!rutBuscado) return { encontrado:false, mensaje:'Debe ingresar un RUT' };
+  if (!rutBuscado) return { encontrado: false, mensaje: 'Debe ingresar un RUT' };
 
   const hoja = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA_PERSONAS);
   if (!hoja) throw new Error('No existe la hoja PERSONAS');
@@ -30,7 +53,7 @@ function buscarPersona(rut) {
       };
     }
   }
-  return { encontrado:false, mensaje:'RUT no encontrado' };
+  return { encontrado: false, mensaje: 'RUT no encontrado' };
 }
 
 function guardarRegistro(rut, nombre, equipo) {
@@ -47,10 +70,9 @@ function guardarRegistro(rut, nombre, equipo) {
   const hora = Utilities.formatDate(ahora, zona, 'HH:mm:ss');
 
   hoja.appendRow([fecha, hora, rutNormalizado, nombre.toString().trim(), equipo ? equipo.toString().trim() : '']);
-
-  return { ok:true, mensaje:'Asistencia registrada correctamente', fecha:fecha, hora:hora };
+  return { ok: true, mensaje: 'Asistencia registrada correctamente', fecha: fecha, hora: hora };
 }
 
 function probarConexion() {
-  return { ok:true, archivo:SpreadsheetApp.getActiveSpreadsheet().getName(), mensaje:'Conexión con Google Sheets funcionando correctamente' };
+  return { ok: true, archivo: SpreadsheetApp.getActiveSpreadsheet().getName(), mensaje: 'Conexión con Google Sheets funcionando correctamente' };
 }

@@ -1,2 +1,1233 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ASISTENCIA COMPUTACIÓN</title><script src="https://unpkg.com/html5-qrcode"></script><style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#5b21b6,#9333ea);min-height:100vh;color:#222}.app{max-width:950px;margin:auto;padding:22px}.brand{text-align:center;color:#fff}.card{background:#fff;border-radius:20px;padding:24px;box-shadow:0 15px 40px #0004}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}@media(max-width:700px){.grid{grid-template-columns:1fr}}#reader{width:100%;min-height:260px}.status{padding:13px;border-radius:10px;margin:12px 0;background:#ede9fe;color:#5b21b6}.ok{background:#dcfce7;color:#166534}.bad{background:#fee2e2;color:#991b1b}.warn{background:#fef3c7;color:#92400e}button{padding:12px 16px;border:0;border-radius:10px;background:#6d28d9;color:#fff;font-weight:bold;margin:4px;cursor:pointer}button:disabled{opacity:.5}input{width:100%;padding:13px;border:1px solid #ddd;border-radius:10px;margin:6px 0 12px;font-size:16px}.persona{background:#f5f3ff;padding:16px;border-radius:12px;margin:10px 0}.footer{text-align:center;color:#666;margin-top:20px;font-size:13px}</style></head><body><main class="app"><header class="brand"><h1>📚 ASISTENCIA COMPUTACIÓN</h1><p>Registro mediante código QR</p></header><section class="card"><div class="grid"><div><h2>📷 Escanear QR</h2><div id="reader"></div><div id="status" class="status">Preparando cámara...</div><button onclick="iniciar()">Iniciar cámara</button><button onclick="detener()">Detener</button></div><div><h2>👤 Registro</h2><input id="rut" placeholder="RUT: 12.345.678-9"><button id="buscarBtn" onclick="buscar()">🔎 Buscar</button><div id="persona"></div><label><b>Equipo utilizado</b></label><input id="equipo" placeholder="Ej. PC-01"><button id="guardarBtn" onclick="guardar()" disabled>✅ Registrar asistencia</button><div id="resultado"></div></div></div><div class="footer">Sala de Computación · Colegio Providencia</div></section></main><script>
-const API='https://script.google.com/a/macros/colprovidencia.cl/s/AKfycbwtCxnO2nwP384mpJlsFT9300W6rzSQkExhkdA5mKULALbWNbEq9D9XeX55Zh6lYg8Mzg/exec';let qr=null,activo=false,persona=null,callbackId=0;const st=document.getElementById('status');function estado(t,c=''){st.textContent=t;st.className='status '+c}function esc(s){return String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]))}function jsonp(url){return new Promise((resolve,reject)=>{const cb='cb_'+Date.now()+'_'+(++callbackId);const script=document.createElement('script');let terminado=false;window[cb]=d=>{terminado=true;delete window[cb];script.remove();resolve(d)};script.onerror=()=>{if(!terminado){delete window[cb];script.remove();reject(new Error('No se pudo conectar con Google Sheets'))}};script.src=url+(url.includes('?')?'&':'?')+'callback='+cb;document.body.appendChild(script);setTimeout(()=>{if(!terminado){delete window[cb];script.remove();reject(new Error('Tiempo de espera agotado al conectar con Google Sheets'))}},15000)})}async function buscar(){const rut=document.getElementById('rut').value.trim();if(!rut){estado('Ingresa un RUT','warn');return}document.getElementById('buscarBtn').disabled=true;estado('Buscando persona...');try{const r=await jsonp(API+'?accion=buscar&rut='+encodeURIComponent(rut));document.getElementById('buscarBtn').disabled=false;if(r.encontrado){persona=r;document.getElementById('persona').innerHTML='<div class="persona"><b>✅ Persona encontrada</b><p><b>Nombre:</b> '+esc(r.nombre)+'</p><p><b>RUT:</b> '+esc(r.rut)+'</p></div>';document.getElementById('guardarBtn').disabled=false;estado('Persona encontrada','ok')}else{persona=null;document.getElementById('persona').innerHTML='<div class="status warn">⚠️ '+esc(r.mensaje||'RUT no encontrado')+'</div>';document.getElementById('guardarBtn').disabled=true;estado('RUT no encontrado','warn')}}catch(e){document.getElementById('buscarBtn').disabled=false;estado('❌ '+esc(e.message),'bad')}}function procesarQR(texto){if(!texto)return;document.getElementById('rut').value=texto.trim();buscar()}async function guardar(){if(!persona)return;const equipo=document.getElementById('equipo').value.trim();document.getElementById('guardarBtn').disabled=true;estado('Guardando asistencia...');try{const r=await jsonp(API+'?accion=guardar&rut='+encodeURIComponent(persona.rut)+'&nombre='+encodeURIComponent(persona.nombre)+'&equipo='+encodeURIComponent(equipo));if(!r.ok)throw new Error(r.mensaje||'No se pudo guardar');document.getElementById('resultado').innerHTML='<div class="status ok"><b>✅ '+esc(r.mensaje)+'</b><br>Fecha: '+esc(r.fecha)+'<br>Hora: '+esc(r.hora)+'</div>';estado('Asistencia registrada en Google Sheets','ok');persona=null;document.getElementById('rut').value='';document.getElementById('equipo').value='';document.getElementById('persona').innerHTML='';document.getElementById('guardarBtn').disabled=true}catch(e){document.getElementById('guardarBtn').disabled=false;estado('❌ '+esc(e.message),'bad')}}async function iniciar(){if(activo)return;try{qr=new Html5Qrcode('reader');await qr.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:250}},procesarQR,()=>{});activo=true;estado('📷 Cámara activa. Apunta al QR.','ok')}catch(e){estado('❌ Cámara bloqueada. Revisa permisos del navegador y que estés usando HTTPS.','bad')}}async function detener(){if(qr&&activo){try{await qr.stop();qr.clear()}catch(e){}activo=false;estado('Cámara detenida')}}window.addEventListener('load',()=>setTimeout(iniciar,800));</script></body></html>
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+ASISTENCIA COMPUTACIÓN
+</title>
+
+<script
+src="https://unpkg.com/html5-qrcode">
+</script>
+
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+
+margin:0;
+
+font-family:
+Arial,
+Helvetica,
+sans-serif;
+
+background:
+linear-gradient(
+135deg,
+#5b21b6,
+#9333ea
+);
+
+min-height:100vh;
+
+color:#222;
+
+}
+
+
+.contenedor{
+
+max-width:950px;
+
+margin:auto;
+
+padding:20px;
+
+}
+
+
+.titulo{
+
+text-align:center;
+
+color:white;
+
+margin-bottom:20px;
+
+}
+
+
+.titulo h1{
+
+margin:0;
+
+font-size:32px;
+
+}
+
+
+.panel{
+
+background:white;
+
+border-radius:20px;
+
+padding:25px;
+
+box-shadow:
+0 15px 40px
+rgba(0,0,0,.25);
+
+}
+
+
+.grid{
+
+display:grid;
+
+grid-template-columns:
+1fr 1fr;
+
+gap:25px;
+
+}
+
+
+@media(max-width:700px){
+
+.grid{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+
+h2{
+
+color:#5b21b6;
+
+}
+
+
+#reader{
+
+width:100%;
+
+max-width:450px;
+
+margin:auto;
+
+}
+
+
+.estado{
+
+padding:14px;
+
+margin-top:15px;
+
+border-radius:10px;
+
+background:#ede9fe;
+
+color:#5b21b6;
+
+font-weight:bold;
+
+text-align:center;
+
+}
+
+
+.correcto{
+
+background:#dcfce7;
+
+color:#166534;
+
+}
+
+
+.error{
+
+background:#fee2e2;
+
+color:#991b1b;
+
+}
+
+
+.advertencia{
+
+background:#fef3c7;
+
+color:#92400e;
+
+}
+
+
+input{
+
+width:100%;
+
+padding:14px;
+
+border:1px solid #ccc;
+
+border-radius:10px;
+
+margin-top:8px;
+
+margin-bottom:12px;
+
+font-size:16px;
+
+}
+
+
+button{
+
+border:none;
+
+border-radius:10px;
+
+padding:13px 18px;
+
+background:#6d28d9;
+
+color:white;
+
+font-size:15px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+margin:4px;
+
+}
+
+
+button:hover{
+
+background:#4c1d95;
+
+}
+
+
+button:disabled{
+
+background:#aaa;
+
+cursor:not-allowed;
+
+}
+
+
+.persona{
+
+background:#f5f3ff;
+
+border-radius:12px;
+
+padding:18px;
+
+margin-top:15px;
+
+border-left:
+5px solid #6d28d9;
+
+}
+
+
+.persona h3{
+
+margin-top:0;
+
+color:#5b21b6;
+
+}
+
+
+.resultado{
+
+margin-top:15px;
+
+}
+
+
+.footer{
+
+text-align:center;
+
+margin-top:25px;
+
+color:#666;
+
+font-size:13px;
+
+}
+
+
+.estadoConexion{
+
+text-align:center;
+
+font-size:13px;
+
+color:#666;
+
+margin-top:10px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="contenedor">
+
+
+<div class="titulo">
+
+<h1>
+📚 ASISTENCIA COMPUTACIÓN
+</h1>
+
+<p>
+Registro de ingreso mediante código QR
+</p>
+
+</div>
+
+
+<div class="panel">
+
+
+<div class="grid">
+
+
+<!-- ================================================= -->
+<!-- LECTOR QR -->
+<!-- ================================================= -->
+
+<div>
+
+<h2>
+📷 Escanear QR
+</h2>
+
+
+<div id="reader">
+</div>
+
+
+<div
+id="estado"
+class="estado">
+
+Preparando cámara...
+
+</div>
+
+
+<div style="text-align:center">
+
+<button
+onclick="iniciarCamara()">
+
+📷 Iniciar cámara
+
+</button>
+
+
+<button
+onclick="detenerCamara()">
+
+⛔ Detener
+
+</button>
+
+</div>
+
+</div>
+
+
+
+<!-- ================================================= -->
+<!-- REGISTRO -->
+<!-- ================================================= -->
+
+<div>
+
+<h2>
+👤 Registro
+</h2>
+
+
+<label>
+
+<strong>
+RUT
+</strong>
+
+</label>
+
+
+<input
+id="rut"
+type="text"
+placeholder="12.345.678-9"
+autocomplete="off">
+
+
+<button
+id="btnBuscar"
+onclick="buscarPersona()">
+
+🔎 Buscar persona
+
+</button>
+
+
+<div id="persona">
+</div>
+
+
+<label>
+
+<strong>
+Equipo utilizado
+</strong>
+
+</label>
+
+
+<input
+id="equipo"
+type="text"
+placeholder="Ej: PC-01">
+
+
+<button
+id="btnRegistrar"
+onclick="guardarAsistencia()"
+disabled>
+
+✅ Registrar asistencia
+
+</button>
+
+
+<div
+id="resultado"
+class="resultado">
+</div>
+
+
+</div>
+
+</div>
+
+
+<div
+id="conexion"
+class="estadoConexion">
+
+🔄 Comprobando conexión...
+
+</div>
+
+
+<div class="footer">
+
+Sala de Computación · Colegio Providencia
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+// =====================================================
+// CONFIGURACIÓN
+// =====================================================
+
+// IMPORTANTE:
+// Debe ser exactamente la URL /exec
+// de tu aplicación Google Apps Script.
+
+const GOOGLE_SCRIPT_URL =
+"https://script.google.com/a/macros/colprovidencia.cl/s/AKfycbwtCxnO2nwP384mpJlsFT9300W6rzSQkExhkdA5mKULALbWNbEq9D9XeX55Zh6lYg8Mzg/exec";
+
+
+
+let lectorQR = null;
+
+let camaraActiva = false;
+
+let personaEncontrada = null;
+
+let ultimoQR = "";
+
+let procesandoQR = false;
+
+
+
+// =====================================================
+// ESTADO
+// =====================================================
+
+function mostrarEstado(
+mensaje,
+tipo=""
+){
+
+const elemento =
+document.getElementById(
+"estado"
+);
+
+elemento.innerHTML =
+mensaje;
+
+elemento.className =
+"estado " + tipo;
+
+}
+
+
+
+// =====================================================
+// ESCAPAR HTML
+// =====================================================
+
+function escapar(texto){
+
+return String(texto)
+
+.replace(/&/g,"&amp;")
+
+.replace(/</g,"&lt;")
+
+.replace(/>/g,"&gt;")
+
+.replace(/"/g,"&quot;")
+
+.replace(/'/g,"&#039;");
+
+}
+
+
+
+// =====================================================
+// LLAMAR GOOGLE APPS SCRIPT
+// =====================================================
+
+async function llamarGoogle(
+datos
+){
+
+const respuesta =
+await fetch(
+GOOGLE_SCRIPT_URL,
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify(datos)
+
+});
+
+
+if(!respuesta.ok){
+
+throw new Error(
+"Error HTTP " +
+respuesta.status
+);
+
+}
+
+
+const resultado =
+await respuesta.json();
+
+
+return resultado;
+
+}
+
+
+
+// =====================================================
+// PROBAR CONEXIÓN
+// =====================================================
+
+async function probarConexion(){
+
+try{
+
+const respuesta =
+await fetch(
+GOOGLE_SCRIPT_URL
+);
+
+const datos =
+await respuesta.json();
+
+
+if(datos.ok){
+
+document.getElementById(
+"conexion"
+).innerHTML =
+"🟢 Google Sheets conectado";
+
+}else{
+
+document.getElementById(
+"conexion"
+).innerHTML =
+"🔴 Error de conexión";
+
+}
+
+}
+
+catch(error){
+
+document.getElementById(
+"conexion"
+).innerHTML =
+"🔴 Google Sheets no disponible";
+
+}
+
+}
+
+
+
+// =====================================================
+// PROCESAR QR
+// =====================================================
+
+function procesarQR(
+contenido
+){
+
+if(!contenido){
+
+return;
+
+}
+
+
+contenido =
+contenido
+.toString()
+.trim();
+
+
+if(
+procesandoQR ||
+contenido === ultimoQR
+){
+
+return;
+
+}
+
+
+ultimoQR =
+contenido;
+
+procesandoQR =
+true;
+
+
+document.getElementById(
+"rut"
+).value =
+contenido;
+
+
+buscarPersona()
+.finally(
+function(){
+
+setTimeout(
+function(){
+
+procesandoQR =
+false;
+
+ultimoQR =
+"";
+
+},
+1500
+);
+
+});
+
+}
+
+
+
+// =====================================================
+// BUSCAR PERSONA
+// =====================================================
+
+async function buscarPersona(){
+
+const rut =
+document
+.getElementById("rut")
+.value
+.trim();
+
+
+if(!rut){
+
+mostrarEstado(
+"⚠️ Ingresa un RUT",
+"advertencia"
+);
+
+return;
+
+}
+
+
+const boton =
+document.getElementById(
+"btnBuscar"
+);
+
+boton.disabled =
+true;
+
+
+mostrarEstado(
+"🔎 Buscando persona...",
+""
+);
+
+
+try{
+
+
+const respuesta =
+await llamarGoogle({
+
+accion:
+"buscarPersona",
+
+rut:
+rut
+
+});
+
+
+if(
+respuesta.ok &&
+respuesta.encontrado
+){
+
+
+personaEncontrada =
+respuesta;
+
+
+document.getElementById(
+"persona"
+).innerHTML = `
+
+<div class="persona">
+
+<h3>
+✅ Persona encontrada
+</h3>
+
+<p>
+
+<strong>
+Nombre:
+</strong>
+
+<br>
+
+${escapar(
+respuesta.nombre
+)}
+
+</p>
+
+
+<p>
+
+<strong>
+RUT:
+</strong>
+
+<br>
+
+${escapar(
+respuesta.rut
+)}
+
+</p>
+
+</div>
+
+`;
+
+
+document.getElementById(
+"btnRegistrar"
+).disabled =
+false;
+
+
+mostrarEstado(
+"✅ Persona encontrada",
+"correcto"
+);
+
+
+}
+
+else{
+
+
+personaEncontrada =
+null;
+
+
+document.getElementById(
+"persona"
+).innerHTML = `
+
+<div class="estado advertencia">
+
+⚠️ ${
+escapar(
+respuesta.mensaje ||
+"RUT no encontrado"
+)
+}
+
+</div>
+
+`;
+
+
+document.getElementById(
+"btnRegistrar"
+).disabled =
+true;
+
+
+mostrarEstado(
+"⚠️ RUT no encontrado",
+"advertencia"
+);
+
+}
+
+}
+
+catch(error){
+
+mostrarEstado(
+"❌ Error de conexión con Google Sheets",
+"error"
+);
+
+console.error(error);
+
+}
+
+finally{
+
+boton.disabled =
+false;
+
+}
+
+}
+
+
+
+// =====================================================
+// GUARDAR ASISTENCIA
+// =====================================================
+
+async function guardarAsistencia(){
+
+if(!personaEncontrada){
+
+mostrarEstado(
+"⚠️ Primero busca una persona",
+"advertencia"
+);
+
+return;
+
+}
+
+
+const equipo =
+document
+.getElementById("equipo")
+.value
+.trim();
+
+
+const boton =
+document.getElementById(
+"btnRegistrar"
+);
+
+boton.disabled =
+true;
+
+
+mostrarEstado(
+"💾 Guardando asistencia...",
+""
+);
+
+
+try{
+
+
+const respuesta =
+await llamarGoogle({
+
+accion:
+"guardarRegistro",
+
+rut:
+personaEncontrada.rut,
+
+nombre:
+personaEncontrada.nombre,
+
+equipo:
+equipo
+
+});
+
+
+if(respuesta.ok){
+
+
+document.getElementById(
+"resultado"
+).innerHTML = `
+
+<div class="estado correcto">
+
+<strong>
+
+✅ ${
+escapar(
+respuesta.mensaje
+)
+}
+
+</strong>
+
+<br><br>
+
+📅 Fecha:
+${escapar(
+respuesta.fecha
+)}
+
+<br>
+
+🕐 Hora:
+${escapar(
+respuesta.hora
+)}
+
+<br>
+
+💻 Equipo:
+${escapar(
+equipo || "No indicado"
+)}
+
+</div>
+
+`;
+
+
+mostrarEstado(
+"✅ Asistencia registrada",
+"correcto"
+);
+
+
+document.getElementById(
+"rut"
+).value =
+"";
+
+
+document.getElementById(
+"equipo"
+).value =
+"";
+
+
+document.getElementById(
+"persona"
+).innerHTML =
+"";
+
+
+personaEncontrada =
+null;
+
+
+boton.disabled =
+true;
+
+
+}else{
+
+
+throw new Error(
+respuesta.error ||
+"Error al guardar"
+);
+
+}
+
+}
+
+catch(error){
+
+mostrarEstado(
+"❌ " +
+escapar(
+error.message
+),
+"error"
+);
+
+boton.disabled =
+false;
+
+}
+
+}
+
+
+
+// =====================================================
+// INICIAR CÁMARA
+// =====================================================
+
+async function iniciarCamara(){
+
+if(camaraActiva){
+
+return;
+
+}
+
+
+if(
+typeof Html5Qrcode ===
+"undefined"
+){
+
+mostrarEstado(
+"❌ No se pudo cargar el lector QR",
+"error"
+);
+
+return;
+
+}
+
+
+try{
+
+
+lectorQR =
+new Html5Qrcode(
+"reader"
+);
+
+
+await lectorQR.start(
+
+{
+facingMode:
+"environment"
+},
+
+{
+
+fps:10,
+
+qrbox:{
+width:250,
+height:250
+}
+
+},
+
+function(texto){
+
+procesarQR(
+texto
+);
+
+},
+
+function(){
+
+// Errores de lectura
+// se ignoran mientras busca
+
+}
+
+);
+
+
+camaraActiva =
+true;
+
+
+mostrarEstado(
+"📷 Cámara activa. Apunta al código QR.",
+"correcto"
+);
+
+
+}
+
+catch(error){
+
+console.error(error);
+
+
+mostrarEstado(
+
+"❌ No se pudo acceder a la cámara. " +
+"Revisa los permisos del navegador.",
+
+"error"
+
+);
+
+}
+
+}
+
+
+
+// =====================================================
+// DETENER CÁMARA
+// =====================================================
+
+async function detenerCamara(){
+
+if(
+lectorQR &&
+camaraActiva
+){
+
+try{
+
+await lectorQR.stop();
+
+lectorQR.clear();
+
+}
+
+catch(error){
+
+console.error(error);
+
+}
+
+
+camaraActiva =
+false;
+
+
+mostrarEstado(
+"⛔ Cámara detenida"
+);
+
+}
+
+}
+
+
+
+// =====================================================
+// INICIO
+// =====================================================
+
+window.addEventListener(
+"load",
+function(){
+
+probarConexion();
+
+setTimeout(
+function(){
+
+iniciarCamara();
+
+},
+1000
+);
+
+});
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
@@ -7,7 +6,10 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color"
+      content="#6d28d9">
 
 <title>
 ASISTENCIA COMPUTACIÓN
@@ -20,280 +22,792 @@ src="https://unpkg.com/html5-qrcode">
 
 <style>
 
-*{
-box-sizing:border-box;
-}
+/* =====================================================
+   CONFIGURACIÓN GENERAL
+===================================================== */
 
-body{
-
-margin:0;
-
-font-family:
-Arial,
-Helvetica,
-sans-serif;
-
-background:
-linear-gradient(
-135deg,
-#5b21b6,
-#9333ea
-);
-
-min-height:100vh;
-
-color:#222;
-
+* {
+    box-sizing: border-box;
 }
 
 
-.contenedor{
-
-max-width:950px;
-
-margin:auto;
-
-padding:20px;
-
+html {
+    width: 100%;
+    min-height: 100%;
 }
 
 
-.titulo{
+body {
 
-text-align:center;
+    margin: 0;
 
-color:white;
+    min-height: 100vh;
 
-margin-bottom:20px;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4c1d95,
+            #7e22ce,
+            #9333ea
+        );
+
+    color: #222;
 
 }
 
 
-.titulo h1{
+/* =====================================================
+   CONTENEDOR
+===================================================== */
 
-margin:0;
+.contenedor {
 
-font-size:32px;
+    width: 100%;
 
-}
+    max-width: 1100px;
 
+    margin: auto;
 
-.panel{
-
-background:white;
-
-border-radius:20px;
-
-padding:25px;
-
-box-shadow:
-0 15px 40px
-rgba(0,0,0,.25);
+    padding:
+        20px;
 
 }
 
 
-.grid{
+/* =====================================================
+   TITULO
+===================================================== */
 
-display:grid;
+.titulo {
 
-grid-template-columns:
-1fr 1fr;
+    text-align: center;
 
-gap:25px;
+    color: white;
 
-}
-
-
-@media(max-width:700px){
-
-.grid{
-
-grid-template-columns:1fr;
-
-}
+    margin-bottom: 20px;
 
 }
 
 
-h2{
+.titulo h1 {
 
-color:#5b21b6;
+    margin: 0;
 
-}
-
-
-#reader{
-
-width:100%;
-
-max-width:450px;
-
-margin:auto;
+    font-size: clamp(
+        24px,
+        5vw,
+        36px
+    );
 
 }
 
 
-.estado{
+.titulo p {
 
-padding:14px;
+    margin:
+        8px 0 0;
 
-margin-top:15px;
-
-border-radius:10px;
-
-background:#ede9fe;
-
-color:#5b21b6;
-
-font-weight:bold;
-
-text-align:center;
+    font-size:
+        clamp(
+            14px,
+            3vw,
+            18px
+        );
 
 }
 
 
-.correcto{
+/* =====================================================
+   PANEL PRINCIPAL
+===================================================== */
 
-background:#dcfce7;
+.panel {
 
-color:#166534;
+    background: white;
 
-}
+    border-radius: 22px;
 
+    padding:
+        clamp(
+            15px,
+            3vw,
+            30px
+        );
 
-.error{
-
-background:#fee2e2;
-
-color:#991b1b;
-
-}
-
-
-.advertencia{
-
-background:#fef3c7;
-
-color:#92400e;
-
-}
-
-
-input{
-
-width:100%;
-
-padding:14px;
-
-border:1px solid #ccc;
-
-border-radius:10px;
-
-margin-top:8px;
-
-margin-bottom:12px;
-
-font-size:16px;
+    box-shadow:
+        0 15px 45px
+        rgba(
+            0,
+            0,
+            0,
+            .28
+        );
 
 }
 
 
-button{
+/* =====================================================
+   GRID
+===================================================== */
 
-border:none;
+.grid {
 
-border-radius:10px;
+    display: grid;
 
-padding:13px 18px;
+    grid-template-columns:
+        minmax(
+            0,
+            1fr
+        )
+        minmax(
+            0,
+            1fr
+        );
 
-background:#6d28d9;
-
-color:white;
-
-font-size:15px;
-
-font-weight:bold;
-
-cursor:pointer;
-
-margin:4px;
-
-}
-
-
-button:hover{
-
-background:#4c1d95;
+    gap: 30px;
 
 }
 
 
-button:disabled{
+@media (max-width: 800px) {
 
-background:#aaa;
+    .grid {
 
-cursor:not-allowed;
+        grid-template-columns:
+            1fr;
 
-}
-
-
-.persona{
-
-background:#f5f3ff;
-
-border-radius:12px;
-
-padding:18px;
-
-margin-top:15px;
-
-border-left:
-5px solid #6d28d9;
+    }
 
 }
 
 
-.persona h3{
+/* =====================================================
+   TITULOS
+===================================================== */
 
-margin-top:0;
+h2 {
 
-color:#5b21b6;
+    color:
+        #5b21b6;
 
-}
-
-
-.resultado{
-
-margin-top:15px;
+    margin-top: 0;
 
 }
 
 
-.footer{
+/* =====================================================
+   AREA DE CAMARA
+===================================================== */
 
-text-align:center;
+.camara-contenedor {
 
-margin-top:25px;
+    width: 100%;
 
-color:#666;
+    background:
+        #111827;
 
-font-size:13px;
+    border-radius:
+        16px;
+
+    padding:
+        10px;
+
+    overflow: hidden;
+
+    border:
+        3px solid
+        #7c3aed;
 
 }
 
 
-.estadoConexion{
+/*
+   Este cuadro permite ver claramente
+   dónde está funcionando la cámara.
+*/
 
-text-align:center;
+#reader {
 
-font-size:13px;
+    width: 100%;
 
-color:#666;
+    min-height:
+        280px;
 
-margin-top:10px;
+    max-width:
+        500px;
+
+    margin:
+        auto;
+
+    border-radius:
+        12px;
+
+    overflow:
+        hidden;
 
 }
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+.estado {
+
+    padding:
+        14px;
+
+    margin-top:
+        15px;
+
+    border-radius:
+        12px;
+
+    background:
+        #ede9fe;
+
+    color:
+        #5b21b6;
+
+    font-weight:
+        bold;
+
+    text-align:
+        center;
+
+    line-height:
+        1.5;
+
+}
+
+
+.correcto {
+
+    background:
+        #dcfce7;
+
+    color:
+        #166534;
+
+}
+
+
+.error {
+
+    background:
+        #fee2e2;
+
+    color:
+        #991b1b;
+
+}
+
+
+.advertencia {
+
+    background:
+        #fef3c7;
+
+    color:
+        #92400e;
+
+}
+
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+label {
+
+    display:
+        block;
+
+    margin-top:
+        12px;
+
+}
+
+
+input {
+
+    width:
+        100%;
+
+    padding:
+        14px;
+
+    border:
+        2px solid
+        #ddd;
+
+    border-radius:
+        10px;
+
+    margin-top:
+        8px;
+
+    margin-bottom:
+        12px;
+
+    font-size:
+        16px;
+
+    outline:
+        none;
+
+    transition:
+        .2s;
+
+}
+
+
+input:focus {
+
+    border-color:
+        #7c3aed;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            124,
+            58,
+            237,
+            .15
+        );
+
+}
+
+
+/* =====================================================
+   BOTONES
+===================================================== */
+
+.botones {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    justify-content:
+        center;
+
+    gap:
+        8px;
+
+    margin-top:
+        10px;
+
+}
+
+
+button {
+
+    border:
+        none;
+
+    border-radius:
+        10px;
+
+    padding:
+        13px 18px;
+
+    background:
+        #6d28d9;
+
+    color:
+        white;
+
+    font-size:
+        15px;
+
+    font-weight:
+        bold;
+
+    cursor:
+        pointer;
+
+    transition:
+        .2s;
+
+}
+
+
+button:hover {
+
+    background:
+        #4c1d95;
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+button:disabled {
+
+    background:
+        #aaa;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+}
+
+
+.btn-detener {
+
+    background:
+        #dc2626;
+
+}
+
+
+.btn-detener:hover {
+
+    background:
+        #991b1b;
+
+}
+
+
+/* =====================================================
+   PERSONA
+===================================================== */
+
+.persona {
+
+    background:
+        #f5f3ff;
+
+    border-radius:
+        12px;
+
+    padding:
+        18px;
+
+    margin-top:
+        15px;
+
+    border-left:
+        5px solid
+        #6d28d9;
+
+}
+
+
+.persona h3 {
+
+    margin-top:
+        0;
+
+    color:
+        #5b21b6;
+
+}
+
+
+.persona p {
+
+    line-height:
+        1.5;
+
+}
+
+
+/* =====================================================
+   RESULTADO
+===================================================== */
+
+.resultado {
+
+    margin-top:
+        15px;
+
+}
+
+
+/* =====================================================
+   CONEXION
+===================================================== */
+
+.estadoConexion {
+
+    text-align:
+        center;
+
+    font-size:
+        14px;
+
+    font-weight:
+        bold;
+
+    margin-top:
+        20px;
+
+    padding:
+        10px;
+
+    border-radius:
+        10px;
+
+    background:
+        #f3f4f6;
+
+    color:
+        #555;
+
+}
+
+
+.conexion-ok {
+
+    background:
+        #dcfce7;
+
+    color:
+        #166534;
+
+}
+
+
+.conexion-error {
+
+    background:
+        #fee2e2;
+
+    color:
+        #991b1b;
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer {
+
+    text-align:
+        center;
+
+    margin-top:
+        25px;
+
+    color:
+        #666;
+
+    font-size:
+        13px;
+
+}
+
+
+/* =====================================================
+   CELULARES
+===================================================== */
+
+@media (max-width: 500px) {
+
+    .contenedor {
+
+        padding:
+            10px;
+
+    }
+
+
+    .panel {
+
+        border-radius:
+            15px;
+
+        padding:
+            15px;
+
+    }
+
+
+    .titulo {
+
+        margin-bottom:
+            12px;
+
+    }
+
+
+    #reader {
+
+        min-height:
+            240px;
+
+    }
+
+
+    button {
+
+        width:
+            100%;
+
+        margin:
+            3px 0;
+
+    }
+
+
+    .botones {
+
+        display:
+            grid;
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+
+/* =====================================================
+   TABLETS
+===================================================== */
+
+@media (
+    min-width: 501px
+)
+and (
+    max-width: 800px
+) {
+
+    button {
+
+        min-width:
+            160px;
+
+    }
+
+}
+
+
+/* =====================================================
+   PC GRANDES
+===================================================== */
+
+@media (min-width: 1200px) {
+
+    .contenedor {
+
+        max-width:
+            1150px;
+
+    }
+
+}
+
+
+/* =====================================================
+   OCULTAR ELEMENTOS INTERNOS DEL LECTOR
+   QUE PUEDEN ROMPER EL DISEÑO
+===================================================== */
+
+#reader video {
+
+    width:
+        100% !important;
+
+    height:
+        auto !important;
+
+    border-radius:
+        10px;
+
+}
+
+
+#reader img {
+
+    max-width:
+        100%;
+
+}
+
+
+#reader__scan_region {
+
+    min-height:
+        230px;
+
+}
+
+
+/* =====================================================
+   INDICADOR DE CAMARA
+===================================================== */
+
+.indicador-camara {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        8px;
+
+    margin-top:
+        10px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        bold;
+
+}
+
+
+.punto {
+
+    width:
+        10px;
+
+    height:
+        10px;
+
+    border-radius:
+        50%;
+
+    background:
+        #9ca3af;
+
+}
+
+
+.punto.activo {
+
+    background:
+        #22c55e;
+
+    box-shadow:
+        0 0 10px
+        #22c55e;
+
+}
+
 
 </style>
 
@@ -306,15 +820,19 @@ margin-top:10px;
 <div class="contenedor">
 
 
+<!-- =====================================================
+     TITULO
+===================================================== -->
+
 <div class="titulo">
 
-<h1>
-📚 ASISTENCIA COMPUTACIÓN
-</h1>
+    <h1>
+        📚 ASISTENCIA COMPUTACIÓN
+    </h1>
 
-<p>
-Registro de ingreso mediante código QR
-</p>
+    <p>
+        Registro de ingreso mediante código QR
+    </p>
 
 </div>
 
@@ -325,141 +843,182 @@ Registro de ingreso mediante código QR
 <div class="grid">
 
 
-<!-- ================================================= -->
-<!-- LECTOR QR -->
-<!-- ================================================= -->
+<!-- =====================================================
+     CAMARA
+===================================================== -->
 
 <div>
 
-<h2>
-📷 Escanear QR
-</h2>
+    <h2>
+        📷 Escanear QR
+    </h2>
 
 
-<div id="reader">
+    <div class="camara-contenedor">
+
+        <div id="reader">
+        </div>
+
+    </div>
+
+
+    <div
+        class="indicador-camara">
+
+        <span
+            id="puntoCamara"
+            class="punto">
+        </span>
+
+        <span
+            id="textoCamara">
+
+            Cámara detenida
+
+        </span>
+
+    </div>
+
+
+    <div
+        id="estado"
+        class="estado">
+
+        Preparando cámara...
+
+    </div>
+
+
+    <div class="botones">
+
+        <button
+            onclick="iniciarCamara()">
+
+            📷 Iniciar cámara
+
+        </button>
+
+
+        <button
+            class="btn-detener"
+            onclick="detenerCamara()">
+
+            ⛔ Detener
+
+        </button>
+
+    </div>
+
 </div>
 
 
-<div
-id="estado"
-class="estado">
 
-Preparando cámara...
-
-</div>
-
-
-<div style="text-align:center">
-
-<button
-onclick="iniciarCamara()">
-
-📷 Iniciar cámara
-
-</button>
-
-
-<button
-onclick="detenerCamara()">
-
-⛔ Detener
-
-</button>
-
-</div>
-
-</div>
-
-
-
-<!-- ================================================= -->
-<!-- REGISTRO -->
-<!-- ================================================= -->
+<!-- =====================================================
+     REGISTRO
+===================================================== -->
 
 <div>
 
-<h2>
-👤 Registro
-</h2>
+    <h2>
+        👤 Registro
+    </h2>
 
 
-<label>
+    <label for="rut">
 
-<strong>
-RUT
-</strong>
+        <strong>
+            RUT
+        </strong>
 
-</label>
-
-
-<input
-id="rut"
-type="text"
-placeholder="12.345.678-9"
-autocomplete="off">
+    </label>
 
 
-<button
-id="btnBuscar"
-onclick="buscarPersona()">
-
-🔎 Buscar persona
-
-</button>
+    <input
+        id="rut"
+        type="text"
+        placeholder="12.345.678-9"
+        autocomplete="off">
 
 
-<div id="persona">
+    <div class="botones">
+
+        <button
+            id="btnBuscar"
+            onclick="buscarPersona()">
+
+            🔎 Buscar persona
+
+        </button>
+
+    </div>
+
+
+    <div id="persona">
+    </div>
+
+
+    <label for="equipo">
+
+        <strong>
+            Equipo utilizado
+        </strong>
+
+    </label>
+
+
+    <input
+        id="equipo"
+        type="text"
+        placeholder="Ej: PC-01"
+        autocomplete="off">
+
+
+    <div class="botones">
+
+        <button
+            id="btnRegistrar"
+            onclick="guardarAsistencia()"
+            disabled>
+
+            ✅ Registrar asistencia
+
+        </button>
+
+    </div>
+
+
+    <div
+        id="resultado"
+        class="resultado">
+
+    </div>
+
+
+</div>
+
 </div>
 
 
-<label>
-
-<strong>
-Equipo utilizado
-</strong>
-
-</label>
-
-
-<input
-id="equipo"
-type="text"
-placeholder="Ej: PC-01">
-
-
-<button
-id="btnRegistrar"
-onclick="guardarAsistencia()"
-disabled>
-
-✅ Registrar asistencia
-
-</button>
-
+<!-- =====================================================
+     CONEXION
+===================================================== -->
 
 <div
-id="resultado"
-class="resultado">
-</div>
+    id="conexion"
+    class="estadoConexion">
 
-
-</div>
+    🔄 Comprobando conexión con Google Sheets...
 
 </div>
 
 
-<div
-id="conexion"
-class="estadoConexion">
-
-🔄 Comprobando conexión...
-
-</div>
-
+<!-- =====================================================
+     FOOTER
+===================================================== -->
 
 <div class="footer">
 
-Sala de Computación · Colegio Providencia
+    Sala de Computación · Colegio Providencia
 
 </div>
 
@@ -477,10 +1036,6 @@ Sala de Computación · Colegio Providencia
 // CONFIGURACIÓN
 // =====================================================
 
-// IMPORTANTE:
-// Debe ser exactamente la URL /exec
-// de tu aplicación Google Apps Script.
-
 const GOOGLE_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbyBpPbL1Lh50vvUF7e72PwIoPFt8oTfmzEaNbvR2IQ0-xBvmh897xWAKCZXk7sXMMoBCw/exec";
 
@@ -496,145 +1051,290 @@ let ultimoQR = "";
 let procesandoQR = false;
 
 
-
 // =====================================================
-// ESTADO
+// ESTADO GENERAL
 // =====================================================
 
 function mostrarEstado(
-mensaje,
-tipo=""
-){
+    mensaje,
+    tipo = ""
+) {
 
-const elemento =
-document.getElementById(
-"estado"
-);
+    const elemento =
+        document.getElementById(
+            "estado"
+        );
 
-elemento.innerHTML =
-mensaje;
+    elemento.innerHTML =
+        mensaje;
 
-elemento.className =
-"estado " + tipo;
+    elemento.className =
+        "estado " + tipo;
 
 }
 
+
+// =====================================================
+// ESTADO DE CAMARA
+// =====================================================
+
+function actualizarEstadoCamara(
+    activa
+) {
+
+    const punto =
+        document.getElementById(
+            "puntoCamara"
+        );
+
+    const texto =
+        document.getElementById(
+            "textoCamara"
+        );
+
+
+    if (activa) {
+
+        punto.classList.add(
+            "activo"
+        );
+
+        texto.innerHTML =
+            "Cámara activa";
+
+    }
+
+    else {
+
+        punto.classList.remove(
+            "activo"
+        );
+
+        texto.innerHTML =
+            "Cámara detenida";
+
+    }
+
+}
 
 
 // =====================================================
 // ESCAPAR HTML
 // =====================================================
 
-function escapar(texto){
+function escapar(texto) {
 
-return String(texto)
+    return String(
+        texto ?? ""
+    )
 
-.replace(/&/g,"&amp;")
+    .replace(
+        /&/g,
+        "&amp;"
+    )
 
-.replace(/</g,"&lt;")
+    .replace(
+        /</g,
+        "&lt;"
+    )
 
-.replace(/>/g,"&gt;")
+    .replace(
+        />/g,
+        "&gt;"
+    )
 
-.replace(/"/g,"&quot;")
+    .replace(
+        /"/g,
+        "&quot;"
+    )
 
-.replace(/'/g,"&#039;");
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
-
 
 
 // =====================================================
 // LLAMAR GOOGLE APPS SCRIPT
 // =====================================================
+// IMPORTANTE:
+// NO utilizamos application/json.
+// Esto evita el preflight CORS.
+// =====================================================
 
 async function llamarGoogle(
-datos
-){
+    datos
+) {
 
-const respuesta =
-await fetch(
-GOOGLE_SCRIPT_URL,
-{
-
-method:"POST",
-
-headers:{
-"Content-Type":
-"application/json"
-},
-
-body:
-JSON.stringify(datos)
-
-});
+    const parametros =
+        new URLSearchParams();
 
 
-if(!respuesta.ok){
+    Object.keys(
+        datos
+    ).forEach(
+        function(clave) {
 
-throw new Error(
-"Error HTTP " +
-respuesta.status
-);
+            parametros.append(
+                clave,
+                datos[clave] ?? ""
+            );
+
+        }
+    );
+
+
+    const respuesta =
+        await fetch(
+            GOOGLE_SCRIPT_URL,
+            {
+
+                method:
+                    "POST",
+
+                body:
+                    parametros
+
+            }
+        );
+
+
+    if (!respuesta.ok) {
+
+        throw new Error(
+            "Error HTTP " +
+            respuesta.status
+        );
+
+    }
+
+
+    const texto =
+        await respuesta.text();
+
+
+    try {
+
+        return JSON.parse(
+            texto
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Respuesta Google:",
+            texto
+        );
+
+        throw new Error(
+            "Google Apps Script no devolvió una respuesta válida"
+        );
+
+    }
 
 }
-
-
-const resultado =
-await respuesta.json();
-
-
-return resultado;
-
-}
-
 
 
 // =====================================================
-// PROBAR CONEXIÓN
+// PROBAR CONEXION
 // =====================================================
 
-async function probarConexion(){
+async function probarConexion() {
 
-try{
-
-const respuesta =
-await fetch(
-GOOGLE_SCRIPT_URL
-);
-
-const datos =
-await respuesta.json();
+    const elemento =
+        document.getElementById(
+            "conexion"
+        );
 
 
-if(datos.ok){
+    elemento.className =
+        "estadoConexion";
 
-document.getElementById(
-"conexion"
-).innerHTML =
-"🟢 Google Sheets conectado";
 
-}else{
+    elemento.innerHTML =
+        "🔄 Comprobando conexión con Google Sheets...";
 
-document.getElementById(
-"conexion"
-).innerHTML =
-"🔴 Error de conexión";
+
+    try {
+
+        const respuesta =
+            await fetch(
+                GOOGLE_SCRIPT_URL,
+                {
+                    method:
+                        "GET"
+                }
+            );
+
+
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "HTTP " +
+                respuesta.status
+            );
+
+        }
+
+
+        const texto =
+            await respuesta.text();
+
+
+        const datos =
+            JSON.parse(
+                texto
+            );
+
+
+        if (
+            datos.ok &&
+            datos.estado ===
+            "conectado"
+        ) {
+
+            elemento.className =
+                "estadoConexion conexion-ok";
+
+            elemento.innerHTML =
+                "🟢 Google Sheets conectado";
+
+        }
+
+        else {
+
+            elemento.className =
+                "estadoConexion conexion-error";
+
+            elemento.innerHTML =
+                "🔴 Google Sheets respondió con error";
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Error de conexión:",
+            error
+        );
+
+
+        elemento.className =
+            "estadoConexion conexion-error";
+
+
+        elemento.innerHTML =
+            "🔴 Google Sheets no disponible";
+
+    }
 
 }
-
-}
-
-catch(error){
-
-document.getElementById(
-"conexion"
-).innerHTML =
-"🔴 Google Sheets no disponible";
-
-}
-
-}
-
 
 
 // =====================================================
@@ -642,565 +1342,640 @@ document.getElementById(
 // =====================================================
 
 function procesarQR(
-contenido
-){
+    contenido
+) {
 
-if(!contenido){
+    if (!contenido) {
 
-return;
+        return;
+
+    }
+
+
+    contenido =
+        contenido
+            .toString()
+            .trim();
+
+
+    if (
+        procesandoQR ||
+        contenido ===
+        ultimoQR
+    ) {
+
+        return;
+
+    }
+
+
+    ultimoQR =
+        contenido;
+
+    procesandoQR =
+        true;
+
+
+    document.getElementById(
+        "rut"
+    ).value =
+        contenido;
+
+
+    buscarPersona()
+        .finally(
+            function() {
+
+                setTimeout(
+                    function() {
+
+                        procesandoQR =
+                            false;
+
+                        ultimoQR =
+                            "";
+
+                    },
+                    1500
+                );
+
+            }
+        );
 
 }
-
-
-contenido =
-contenido
-.toString()
-.trim();
-
-
-if(
-procesandoQR ||
-contenido === ultimoQR
-){
-
-return;
-
-}
-
-
-ultimoQR =
-contenido;
-
-procesandoQR =
-true;
-
-
-document.getElementById(
-"rut"
-).value =
-contenido;
-
-
-buscarPersona()
-.finally(
-function(){
-
-setTimeout(
-function(){
-
-procesandoQR =
-false;
-
-ultimoQR =
-"";
-
-},
-1500
-);
-
-});
-
-}
-
 
 
 // =====================================================
 // BUSCAR PERSONA
 // =====================================================
 
-async function buscarPersona(){
+async function buscarPersona() {
 
-const rut =
-document
-.getElementById("rut")
-.value
-.trim();
+    const rut =
+        document
+            .getElementById(
+                "rut"
+            )
+            .value
+            .trim();
 
 
-if(!rut){
+    if (!rut) {
 
-mostrarEstado(
-"⚠️ Ingresa un RUT",
-"advertencia"
-);
+        mostrarEstado(
+            "⚠️ Ingresa un RUT",
+            "advertencia"
+        );
 
-return;
+        return;
+
+    }
+
+
+    const boton =
+        document.getElementById(
+            "btnBuscar"
+        );
+
+
+    boton.disabled =
+        true;
+
+
+    mostrarEstado(
+        "🔎 Buscando persona...",
+        ""
+    );
+
+
+    try {
+
+        const respuesta =
+            await llamarGoogle({
+
+                accion:
+                    "buscarPersona",
+
+                rut:
+                    rut
+
+            });
+
+
+        if (
+            respuesta.ok &&
+            respuesta.encontrado
+        ) {
+
+            personaEncontrada =
+                respuesta;
+
+
+            document.getElementById(
+                "persona"
+            ).innerHTML = `
+
+                <div class="persona">
+
+                    <h3>
+                        ✅ Persona encontrada
+                    </h3>
+
+                    <p>
+
+                        <strong>
+                            Nombre:
+                        </strong>
+
+                        <br>
+
+                        ${escapar(
+                            respuesta.nombre
+                        )}
+
+                    </p>
+
+                    <p>
+
+                        <strong>
+                            RUT:
+                        </strong>
+
+                        <br>
+
+                        ${escapar(
+                            respuesta.rut
+                        )}
+
+                    </p>
+
+                </div>
+
+            `;
+
+
+            document.getElementById(
+                "btnRegistrar"
+            ).disabled =
+                false;
+
+
+            mostrarEstado(
+                "✅ Persona encontrada",
+                "correcto"
+            );
+
+        }
+
+        else {
+
+            personaEncontrada =
+                null;
+
+
+            document.getElementById(
+                "persona"
+            ).innerHTML = `
+
+                <div class="estado advertencia">
+
+                    ⚠️ ${
+                        escapar(
+                            respuesta.mensaje ||
+                            "RUT no encontrado"
+                        )
+                    }
+
+                </div>
+
+            `;
+
+
+            document.getElementById(
+                "btnRegistrar"
+            ).disabled =
+                true;
+
+
+            mostrarEstado(
+                "⚠️ RUT no encontrado",
+                "advertencia"
+            );
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Error buscando persona:",
+            error
+        );
+
+
+        mostrarEstado(
+            "❌ Error de conexión con Google Sheets",
+            "error"
+        );
+
+    }
+
+    finally {
+
+        boton.disabled =
+            false;
+
+    }
 
 }
-
-
-const boton =
-document.getElementById(
-"btnBuscar"
-);
-
-boton.disabled =
-true;
-
-
-mostrarEstado(
-"🔎 Buscando persona...",
-""
-);
-
-
-try{
-
-
-const respuesta =
-await llamarGoogle({
-
-accion:
-"buscarPersona",
-
-rut:
-rut
-
-});
-
-
-if(
-respuesta.ok &&
-respuesta.encontrado
-){
-
-
-personaEncontrada =
-respuesta;
-
-
-document.getElementById(
-"persona"
-).innerHTML = `
-
-<div class="persona">
-
-<h3>
-✅ Persona encontrada
-</h3>
-
-<p>
-
-<strong>
-Nombre:
-</strong>
-
-<br>
-
-${escapar(
-respuesta.nombre
-)}
-
-</p>
-
-
-<p>
-
-<strong>
-RUT:
-</strong>
-
-<br>
-
-${escapar(
-respuesta.rut
-)}
-
-</p>
-
-</div>
-
-`;
-
-
-document.getElementById(
-"btnRegistrar"
-).disabled =
-false;
-
-
-mostrarEstado(
-"✅ Persona encontrada",
-"correcto"
-);
-
-
-}
-
-else{
-
-
-personaEncontrada =
-null;
-
-
-document.getElementById(
-"persona"
-).innerHTML = `
-
-<div class="estado advertencia">
-
-⚠️ ${
-escapar(
-respuesta.mensaje ||
-"RUT no encontrado"
-)
-}
-
-</div>
-
-`;
-
-
-document.getElementById(
-"btnRegistrar"
-).disabled =
-true;
-
-
-mostrarEstado(
-"⚠️ RUT no encontrado",
-"advertencia"
-);
-
-}
-
-}
-
-catch(error){
-
-mostrarEstado(
-"❌ Error de conexión con Google Sheets",
-"error"
-);
-
-console.error(error);
-
-}
-
-finally{
-
-boton.disabled =
-false;
-
-}
-
-}
-
 
 
 // =====================================================
 // GUARDAR ASISTENCIA
 // =====================================================
 
-async function guardarAsistencia(){
+async function guardarAsistencia() {
 
-if(!personaEncontrada){
+    if (!personaEncontrada) {
 
-mostrarEstado(
-"⚠️ Primero busca una persona",
-"advertencia"
-);
+        mostrarEstado(
+            "⚠️ Primero busca una persona",
+            "advertencia"
+        );
 
-return;
+        return;
+
+    }
+
+
+    const equipo =
+        document
+            .getElementById(
+                "equipo"
+            )
+            .value
+            .trim();
+
+
+    const boton =
+        document.getElementById(
+            "btnRegistrar"
+        );
+
+
+    boton.disabled =
+        true;
+
+
+    mostrarEstado(
+        "💾 Guardando asistencia...",
+        ""
+    );
+
+
+    try {
+
+        const respuesta =
+            await llamarGoogle({
+
+                accion:
+                    "guardarRegistro",
+
+                rut:
+                    personaEncontrada.rut,
+
+                nombre:
+                    personaEncontrada.nombre,
+
+                equipo:
+                    equipo
+
+            });
+
+
+        if (respuesta.ok) {
+
+            document.getElementById(
+                "resultado"
+            ).innerHTML = `
+
+                <div class="estado correcto">
+
+                    <strong>
+
+                        ✅ ${
+                            escapar(
+                                respuesta.mensaje
+                            )
+                        }
+
+                    </strong>
+
+                    <br><br>
+
+                    📅 Fecha:
+                    ${escapar(
+                        respuesta.fecha
+                    )}
+
+                    <br>
+
+                    🕐 Hora:
+                    ${escapar(
+                        respuesta.hora
+                    )}
+
+                    <br>
+
+                    💻 Equipo:
+                    ${escapar(
+                        equipo ||
+                        "No indicado"
+                    )}
+
+                </div>
+
+            `;
+
+
+            mostrarEstado(
+                "✅ Asistencia registrada",
+                "correcto"
+            );
+
+
+            document.getElementById(
+                "rut"
+            ).value =
+                "";
+
+
+            document.getElementById(
+                "equipo"
+            ).value =
+                "";
+
+
+            document.getElementById(
+                "persona"
+            ).innerHTML =
+                "";
+
+
+            personaEncontrada =
+                null;
+
+
+            boton.disabled =
+                true;
+
+        }
+
+        else {
+
+            throw new Error(
+                respuesta.error ||
+                "Error al guardar"
+            );
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Error guardando:",
+            error
+        );
+
+
+        mostrarEstado(
+            "❌ " +
+            escapar(
+                error.message
+            ),
+            "error"
+        );
+
+
+        boton.disabled =
+            false;
+
+    }
 
 }
-
-
-const equipo =
-document
-.getElementById("equipo")
-.value
-.trim();
-
-
-const boton =
-document.getElementById(
-"btnRegistrar"
-);
-
-boton.disabled =
-true;
-
-
-mostrarEstado(
-"💾 Guardando asistencia...",
-""
-);
-
-
-try{
-
-
-const respuesta =
-await llamarGoogle({
-
-accion:
-"guardarRegistro",
-
-rut:
-personaEncontrada.rut,
-
-nombre:
-personaEncontrada.nombre,
-
-equipo:
-equipo
-
-});
-
-
-if(respuesta.ok){
-
-
-document.getElementById(
-"resultado"
-).innerHTML = `
-
-<div class="estado correcto">
-
-<strong>
-
-✅ ${
-escapar(
-respuesta.mensaje
-)
-}
-
-</strong>
-
-<br><br>
-
-📅 Fecha:
-${escapar(
-respuesta.fecha
-)}
-
-<br>
-
-🕐 Hora:
-${escapar(
-respuesta.hora
-)}
-
-<br>
-
-💻 Equipo:
-${escapar(
-equipo || "No indicado"
-)}
-
-</div>
-
-`;
-
-
-mostrarEstado(
-"✅ Asistencia registrada",
-"correcto"
-);
-
-
-document.getElementById(
-"rut"
-).value =
-"";
-
-
-document.getElementById(
-"equipo"
-).value =
-"";
-
-
-document.getElementById(
-"persona"
-).innerHTML =
-"";
-
-
-personaEncontrada =
-null;
-
-
-boton.disabled =
-true;
-
-
-}else{
-
-
-throw new Error(
-respuesta.error ||
-"Error al guardar"
-);
-
-}
-
-}
-
-catch(error){
-
-mostrarEstado(
-"❌ " +
-escapar(
-error.message
-),
-"error"
-);
-
-boton.disabled =
-false;
-
-}
-
-}
-
 
 
 // =====================================================
-// INICIAR CÁMARA
+// INICIAR CAMARA
 // =====================================================
 
-async function iniciarCamara(){
+async function iniciarCamara() {
 
-if(camaraActiva){
+    if (camaraActiva) {
 
-return;
+        return;
+
+    }
+
+
+    if (
+        typeof Html5Qrcode ===
+        "undefined"
+    ) {
+
+        mostrarEstado(
+            "❌ No se pudo cargar el lector QR",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        /*
+         * Limpiamos el lector anterior
+         */
+
+        const contenedor =
+            document.getElementById(
+                "reader"
+            );
+
+
+        contenedor.innerHTML =
+            "";
+
+
+        lectorQR =
+            new Html5Qrcode(
+                "reader"
+            );
+
+
+        await lectorQR.start(
+
+            {
+                facingMode:
+                    "environment"
+            },
+
+            {
+
+                fps:
+                    10,
+
+                qrbox:
+                {
+                    width:
+                        Math.min(
+                            250,
+                            window.innerWidth -
+                            80
+                        ),
+
+                    height:
+                        Math.min(
+                            250,
+                            window.innerWidth -
+                            80
+                        )
+                }
+
+            },
+
+            function(texto) {
+
+                procesarQR(
+                    texto
+                );
+
+            },
+
+            function() {
+
+                /*
+                 * Errores normales de lectura.
+                 * No mostramos mensaje.
+                 */
+
+            }
+
+        );
+
+
+        camaraActiva =
+            true;
+
+
+        actualizarEstadoCamara(
+            true
+        );
+
+
+        mostrarEstado(
+            "📷 Cámara activa. Apunta al código QR.",
+            "correcto"
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Error cámara:",
+            error
+        );
+
+
+        camaraActiva =
+            false;
+
+
+        actualizarEstadoCamara(
+            false
+        );
+
+
+        mostrarEstado(
+
+            "❌ No se pudo acceder a la cámara. " +
+            "Revisa los permisos del navegador.",
+
+            "error"
+
+        );
+
+    }
 
 }
-
-
-if(
-typeof Html5Qrcode ===
-"undefined"
-){
-
-mostrarEstado(
-"❌ No se pudo cargar el lector QR",
-"error"
-);
-
-return;
-
-}
-
-
-try{
-
-
-lectorQR =
-new Html5Qrcode(
-"reader"
-);
-
-
-await lectorQR.start(
-
-{
-facingMode:
-"environment"
-},
-
-{
-
-fps:10,
-
-qrbox:{
-width:250,
-height:250
-}
-
-},
-
-function(texto){
-
-procesarQR(
-texto
-);
-
-},
-
-function(){
-
-// Errores de lectura
-// se ignoran mientras busca
-
-}
-
-);
-
-
-camaraActiva =
-true;
-
-
-mostrarEstado(
-"📷 Cámara activa. Apunta al código QR.",
-"correcto"
-);
-
-
-}
-
-catch(error){
-
-console.error(error);
-
-
-mostrarEstado(
-
-"❌ No se pudo acceder a la cámara. " +
-"Revisa los permisos del navegador.",
-
-"error"
-
-);
-
-}
-
-}
-
 
 
 // =====================================================
-// DETENER CÁMARA
+// DETENER CAMARA
 // =====================================================
 
-async function detenerCamara(){
+async function detenerCamara() {
 
-if(
-lectorQR &&
-camaraActiva
-){
+    if (
+        lectorQR &&
+        camaraActiva
+    ) {
 
-try{
+        try {
 
-await lectorQR.stop();
+            await lectorQR.stop();
 
-lectorQR.clear();
+        }
+
+        catch(error) {
+
+            console.error(
+                error
+            );
+
+        }
+
+
+        try {
+
+            lectorQR.clear();
+
+        }
+
+        catch(error) {
+
+            console.error(
+                error
+            );
+
+        }
+
+    }
+
+
+    lectorQR =
+        null;
+
+    camaraActiva =
+        false;
+
+
+    actualizarEstadoCamara(
+        false
+    );
+
+
+    mostrarEstado(
+        "⛔ Cámara detenida"
+    );
 
 }
-
-catch(error){
-
-console.error(error);
-
-}
-
-
-camaraActiva =
-false;
-
-
-mostrarEstado(
-"⛔ Cámara detenida"
-);
-
-}
-
-}
-
 
 
 // =====================================================
@@ -1208,21 +1983,32 @@ mostrarEstado(
 // =====================================================
 
 window.addEventListener(
-"load",
-function(){
+    "load",
+    function() {
 
-probarConexion();
+        /*
+         * Primero comprobamos Google Sheets.
+         */
 
-setTimeout(
-function(){
+        probarConexion();
 
-iniciarCamara();
 
-},
-1000
+        /*
+         * Después iniciamos la cámara.
+         */
+
+        setTimeout(
+            function() {
+
+                iniciarCamara();
+
+            },
+            1000
+        );
+
+    }
 );
 
-});
 
 </script>
 
